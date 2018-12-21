@@ -6,8 +6,11 @@
   },
   "dependencies": {
     "carlo": "^0.9.43",
+    "d3-scale": "^2.1.2",
+    "d3-time": "^1.0.10",
     "react": "^16.7.0",
-    "react-dom": "^16.6.3"
+    "react-dom": "^16.6.3",
+    "react-stockcharts": "^0.7.8"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

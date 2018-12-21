@@ -10,7 +10,7 @@ test('starting the ui', async t => {
   const [page] = await browser.pages()
   const text = await page.$eval('div', el => el.textContent)
 
-  t.is(text, 'Hello World!')
+  t.true(text.includes('Money Tree'))
 
   await ui.exit()
 })
