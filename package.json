@@ -1,0 +1,40 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "node -r @babel/register index.js",
+    "test": "ava -v"
+  },
+  "dependencies": {
+    "carlo": "^0.9.43",
+    "react": "^16.7.0",
+    "react-dom": "^16.6.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "ava": "^1.0.1",
+    "jsdom": "^13.1.0",
+    "parcel-bundler": "^1.11.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current",
+            "browsers": "last 1 chrome version"
+          }
+        }
+      ],
+      "@babel/react"
+    ]
+  },
+  "ava": {
+    "require": [
+      "@babel/register"
+    ]
+  }
+}
