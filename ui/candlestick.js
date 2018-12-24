@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Styled = styled.g`
-  stroke-width: 1;
+  stroke-width: 2;
   fill: transparent;
 
   &.increasing {
