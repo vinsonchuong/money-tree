@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { render } from 'react-dom'
+import render from './render'
 import Candlesticks from './candlesticks'
 
 const data = [
@@ -15,7 +15,7 @@ const data = [
 
 render(
   <div>
-    <h1>Money Tree </h1>
+    <h1>Money Tree</h1>
     <Candlesticks data={data} />
   </div>,
   window.root

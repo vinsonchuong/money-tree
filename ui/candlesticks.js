@@ -1,39 +1,29 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import styled from 'styled-components'
+import Candlestick from './candlestick'
 
-import { scaleTime } from 'd3-scale'
-import { utcDay } from 'd3-time'
+const Styled = styled.div`
+  svg {
+    display: block;
+    width: 100%;
+    height: 600px;
+  }
+`
 
-import { ChartCanvas, Chart } from 'react-stockcharts'
-import { CandlestickSeries } from 'react-stockcharts/lib/series'
-import { XAxis, YAxis } from 'react-stockcharts/lib/axes'
-import { last, timeIntervalBarWidth } from 'react-stockcharts/lib/utils'
+const candleWidth = 100
 
-export default function CandleStickChart({ data }) {
-  const xAccessor = d => d.date
-  const xExtents = [
-    xAccessor(last(data)),
-    xAccessor(data[0])
-  ]
+export default function({ data }) {
+  const max = Math.max(...data.map(d => d.high))
+  const min = Math.min(...data.map(d => d.low))
+  const range = max - min
 
   return (
-    <ChartCanvas
-      height={400}
-      ratio={1}
-      width={800}
-      margin={{ left: 50, right: 50, top: 50, bottom: 50 }}
-      type="hybrid"
-      seriesName="MSFT"
-      data={data}
-      xAccessor={xAccessor}
-      xScale={scaleTime()}
-      xExtents={xExtents}
-    >
-      <Chart yExtents={d => [d.high, d.low]}>
-        <XAxis axisAt="bottom" orient="bottom" ticks={6}/>
-        <YAxis axisAt="left" orient="left" ticks={5} />
-        <CandlestickSeries width={timeIntervalBarWidth(utcDay)}/>
-      </Chart>
-    </ChartCanvas>
+    <Styled>
+      <svg viewBox={`0 ${-max} ${data.length * candleWidth} ${range}`}>
+        {data.map((candlestick, index) =>
+          <Candlestick key={index} index={index} candlestick={candlestick} />
+        )}
+      </svg>
+    </Styled>
   )
 }
