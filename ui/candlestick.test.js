@@ -4,7 +4,7 @@ import render from './render'
 import Candlestick from './candlestick'
 
 /*
-price          Increasing Decreasing
+price           Increasing Decreasing
   |
   |   high ---- '    ||    '    ||    ' ---- high
   |             '    ||    '    ||    '
