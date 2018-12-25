@@ -10,9 +10,13 @@ export default async function() {
   })
   await bundler.bundle()
 
-  const ui = await carlo.launch({
-    args: ['--allow-insecure-localhost']
-  })
+  const carloArgs = [
+    '--allow-insecure-localhost'
+  ]
+  if (process.env.CI) {
+    carloArgs.push('--no-sandbox', '--disable-setuid-sandbox')
+  }
+  const ui = await carlo.launch({ args: carloArgs })
   ui.serveFolder('dist')
   await ui.load('index.html')
 
