@@ -13,10 +13,10 @@ export default async function() {
   const carloArgs = [
     '--allow-insecure-localhost'
   ]
-  console.log(process.env)
   if (process.env.CI) {
     carloArgs.push('--no-sandbox', '--disable-setuid-sandbox')
   }
+  console.log(carloArgs)
   const ui = await carlo.launch({ args: carloArgs })
   ui.serveFolder('dist')
   await ui.load('index.html')
