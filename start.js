@@ -16,7 +16,6 @@ export default async function() {
   if (process.env.CI) {
     carloArgs.push('--no-sandbox', '--disable-setuid-sandbox')
   }
-  console.log(carloArgs)
   const ui = await carlo.launch({ args: carloArgs })
   ui.serveFolder('dist')
   await ui.load('index.html')
