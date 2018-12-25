@@ -7,6 +7,9 @@
   "dependencies": {
     "carlo": "^0.9.43",
     "classnames": "^2.2.6",
+    "get-stream": "^4.1.0",
+    "heliograph": "^4.8.0",
+    "p-event": "^2.1.0",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
     "styled-components": "^4.1.3"
