@@ -1,6 +1,6 @@
 import { render } from 'react-dom'
 
-if (process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === 'test' && !global.window) {
   const { JSDOM } = require('jsdom')
 
   const { window } = new JSDOM('<!doctype html>')

@@ -8,7 +8,7 @@ test('starting the ui', async t => {
 
   const browser = ui.browserForTest()
   const [page] = await browser.pages()
-  const text = await page.$eval('div', el => el.textContent)
+  const text = await page.$eval('body', el => el.textContent)
 
   t.true(text.includes('Money Tree'))
 
