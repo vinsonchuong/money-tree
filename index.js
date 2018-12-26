@@ -1,4 +1,4 @@
-import start from './start'
+import { start } from './ui'
 
 async function run() {
   const ui = await start()

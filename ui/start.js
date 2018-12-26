@@ -2,7 +2,7 @@ import Bundler from 'parcel-bundler'
 import carlo from 'carlo'
 
 export default async function() {
-  const bundler = new Bundler('ui/index.html', {
+  const bundler = new Bundler('ui/ui.html', {
     outDir: './dist',
     https: true,
     hmrHostname: 'localhost',
@@ -18,7 +18,7 @@ export default async function() {
   }
   const ui = await carlo.launch({ args: carloArgs })
   ui.serveFolder('dist')
-  await ui.load('index.html')
+  await ui.load('ui.html')
 
   return ui
 }
