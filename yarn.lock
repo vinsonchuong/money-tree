@@ -3277,10 +3277,10 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-heliograph@^4.8.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/heliograph/-/heliograph-4.8.0.tgz#e51982da48902e23e1647b4e08f23eb091ae0131"
-  integrity sha512-TcxVlgBXgf72ithVLx3rYsWZyyDG7rsV48gFLYDUmECwxWlMri0aHH+vGr2LgPoshdcemsCYIpY8eX0QFoIiZQ==
+heliograph@^4.9.0:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/heliograph/-/heliograph-4.9.0.tgz#a7b9a5c7f3cc0daf181992c695fc1eb42455b9ce"
+  integrity sha512-euYE94cY09Myx+kGCtSiGZPhPQ8d6ohUEAGa4VMJQ+4mo/5QNVuahvcKtJCXT2k9op2bNAuP7uZGtZHF1lWtkQ==
   dependencies:
     isomorphic-ws "^4.0.1"
     lodash "^4.17.11"
