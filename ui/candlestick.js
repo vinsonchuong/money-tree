@@ -2,16 +2,21 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Styled = styled.g`
-  stroke-width: 2;
+  stroke-width: 0;
   fill: transparent;
 
   &.increasing {
     stroke: #2d882d;
+    fill: #2d882d;
   }
 
   &.decreasing {
     stroke: #aa3939;
     fill: #aa3939;
+  }
+
+  line {
+    stroke-width: 1;
   }
 `
 

@@ -19,7 +19,7 @@ export default function({ data }) {
 
   return (
     <Styled>
-      <svg viewBox={`0 ${-max} ${data.length * candleWidth} ${range}`}>
+      <svg preserveAspectRatio="none" viewBox={`0 ${-max} ${data.length * candleWidth} ${range}`}>
         {data.map((candlestick, index) =>
           <Candlestick key={index} index={index} candlestick={candlestick} />
         )}
