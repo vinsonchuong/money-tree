@@ -6,7 +6,7 @@ async function run() {
   const api = await startWssServer(async socket => {
     const candlesticks = streamCandlesticks({
       productId: 'ETH-USD',
-      granularity: 1000 * 60 * 5 * 3,
+      granularity: 1000 * 60 * 15,
       start: Date.parse('2018-12-27')
     })
 

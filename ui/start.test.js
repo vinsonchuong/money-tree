@@ -1,24 +1,40 @@
 import test from 'ava'
-import carlo from 'carlo'
+import { openCarlo, findElement, evalInTab } from 'puppet-strings'
+import { startWssServer } from '../lib/http'
 import start from './start'
 
 test('starting the ui', async t => {
-  carlo.enterTestMode()
+  const granularity = 1000 * 60 * 15
+  const candlestickIndex = Math.floor(Date.now() / granularity)
 
-  const config = {
-    param1: 'foo',
-    paran2: 'bar'
-  }
+  const api = await startWssServer(async socket => {
+    await socket.send(JSON.stringify({
+      time: new Date((candlestickIndex - 1) * granularity),
+      granularity,
+      open: 100,
+      close: 110,
+      high: 120,
+      low: 90
+    }))
 
-  const ui = await start(config)
+    await socket.send(JSON.stringify({
+      time: new Date(candlestickIndex * granularity),
+      granularity,
+      open: 110,
+      close: 120,
+      high: 130,
+      low: 100
+    }))
+  })
+  const ui = await start({ apiUrl: `wss://localhost:${api.port}` })
 
-  const browser = ui.browserForTest()
-  const [page] = await browser.pages()
+  const tab = await openCarlo(ui)
 
-  const text = await page.$eval('body', el => el.textContent)
-  t.true(text.includes('Money Tree'))
-
-  t.deepEqual(await page.evaluate('window.getConfig()'), config)
+  await findElement(tab, '.chart')
+  t.is(
+    await evalInTab(tab, [], `return document.querySelectorAll('.candlestick').length`),
+    2
+  )
 
   await ui.exit()
 })

@@ -1,4 +1,5 @@
 import React from 'react'
+import cx from 'classnames'
 import styled from 'styled-components'
 
 const Styled = styled.g`
@@ -16,39 +17,43 @@ const Styled = styled.g`
   }
 
   line {
-    stroke-width: 1;
+    stroke-width: 2;
   }
 `
 
-const width = 100
-const margin = 10
+const margin = 2
 
-export default function({ index, candlestick: { open, close, high, low } }) {
+export default function({
+  coordinates: { x, y, width, height },
+  candlestick: { time, granularity, open, close, high, low }
+}) {
   const bodyTop = Math.max(open, close)
   const bodyBottom = Math.min(open, close)
 
   return (
-    <Styled
-      className={close > open ? 'increasing': 'decreasing'}
-      transform="scale(1, -1)"
-    >
+      <Styled
+        className={cx('candlestick', { increasing: close >= open, decreasing: close < open })}
+      >
       <line
-        x1={(index + 0.5) * width}
-        y1={high}
-        x2={(index + 0.5) * width}
-        y2={bodyTop}
+        className="upper-shadow"
+        x1={x(time.valueOf() + granularity / 2)}
+        y1={y(high)}
+        x2={x(time.valueOf() + granularity / 2)}
+        y2={y(bodyTop)}
       />
       <rect
-        x={index * width + margin}
-        width={width - 2 * margin}
-        y={bodyBottom}
-        height={bodyTop - bodyBottom}
+        className="real-body"
+        x={x(time) + margin}
+        width={width(granularity) - 2 * margin}
+        y={y(bodyTop)}
+        height={height(bodyTop - bodyBottom)}
       />
       <line
-        x1={(index + 0.5) * width}
-        y1={bodyBottom}
-        x2={(index + 0.5) * width}
-        y2={low}
+        className="lower-shadow"
+        x1={x(time.valueOf() + granularity / 2)}
+        y1={y(bodyBottom)}
+        x2={x(time.valueOf() + granularity / 2)}
+        y2={y(low)}
       />
     </Styled>
   )

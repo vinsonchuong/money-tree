@@ -1,49 +1,63 @@
 import test from 'ava'
 import React from 'react'
 import render from './render'
+import defineCoordinates from './define-coordinates'
 import Candlestick from './candlestick'
 
-/*
-price           Increasing Decreasing
-  |
-  |   high ---- '    ||    '    ||    ' ---- high
-  |             '    ||    '    ||    '
-  |  close ---- '  ======  '  ======  ' ---- open
-  |             '  |    |  '  |xxxx|  '
-  |             '  |    |  '  |xxxx|  '
-  |             '  |    |  '  |xxxx|  '
-  |   open ---- '  ======  '  ======  ' ---- close
-  |             '    ||    '    ||    '
-  |    low ---- '    ||    '    ||    ' ---- low
-  |             '          '          '
-  |-------------|--|----|--|--|----|--|
-  | index * 100  10  80  10 10  80  10
-  +------------------------------------------ index
-*/
+const candlesticks = [
+  {
+    time: new Date('2019-01-01T00:00:00.000Z'),
+    granularity: 1000 * 60 * 15,
+    open: 100,
+    close: 110,
+    high: 120,
+    low: 90
+  },
+  {
+    time: new Date('2019-01-01T00:15:00.000Z'),
+    granularity: 1000 * 60 * 15,
+    open: 110,
+    close: 90,
+    high: 110,
+    low: 80
+  }
+]
+
+const coordinates = defineCoordinates({
+  width: 1000,
+  height: 1000,
+  candlesticks
+})
 
 test('rendering an increasing candlestick', t => {
   const container = document.createElement('svg')
   render(
     <Candlestick
-      index={0}
-      candlestick={{ open: 1, close: 2, low: 0, high: 3 }}
+      coordinates={coordinates}
+      candlestick={candlesticks[0]}
     />,
     container
   )
 
-  t.true(container.querySelector('g').className.includes('increasing'))
+  const candlestick = container.querySelector('.candlestick')
+  t.true(candlestick.className.includes('increasing'))
 
+  const upperShadow = candlestick.querySelector('.upper-shadow')
   t.deepEqual(
-    getAttributes(container.querySelectorAll('line')[0]),
-    { x1: '50', y1: '3', x2: '50', y2: '2'}
+    getAttributes(upperShadow),
+    { class: 'upper-shadow', x1: '250', y1: '0', x2: '250', y2: '250'}
   )
+
+  const realBody = candlestick.querySelector('.real-body')
   t.deepEqual(
-    getAttributes(container.querySelector('rect')),
-    { x: '10', width: '80', y: '1', height: '1' }
+    getAttributes(realBody),
+    { class: 'real-body', x: '2', width: '496', y: '250', height: '250'}
   )
+
+  const lowerShadow = candlestick.querySelector('.lower-shadow')
   t.deepEqual(
-    getAttributes(container.querySelectorAll('line')[1]),
-    { x1: '50', y1: '1', x2: '50', y2: '0'}
+    getAttributes(lowerShadow),
+    { class: 'lower-shadow', x1: '250', y1: '500', x2: '250', y2: '750'}
   )
 })
 
@@ -51,25 +65,31 @@ test('rendering a decreasing candlestick', t => {
   const container = document.createElement('svg')
   render(
     <Candlestick
-      index={0}
-      candlestick={{ open: 2, close: 1, low: 0, high: 3 }}
+      coordinates={coordinates}
+      candlestick={candlesticks[1]}
     />,
     container
   )
 
-  t.true(container.querySelector('g').className.includes('decreasing'))
+  const candlestick = container.querySelector('.candlestick')
+  t.true(candlestick.className.includes('decreasing'))
 
+  const upperShadow = candlestick.querySelector('.upper-shadow')
   t.deepEqual(
-    getAttributes(container.querySelectorAll('line')[0]),
-    { x1: '50', y1: '3', x2: '50', y2: '2'}
+    getAttributes(upperShadow),
+    { class: 'upper-shadow', x1: '750', y1: '250', x2: '750', y2: '250'}
   )
+
+  const realBody = candlestick.querySelector('.real-body')
   t.deepEqual(
-    getAttributes(container.querySelector('rect')),
-    { x: '10', width: '80', y: '1', height: '1' }
+    getAttributes(realBody),
+    { class: 'real-body', x: '502', width: '496', y: '250', height: '500'}
   )
+
+  const lowerShadow = candlestick.querySelector('.lower-shadow')
   t.deepEqual(
-    getAttributes(container.querySelectorAll('line')[1]),
-    { x1: '50', y1: '1', x2: '50', y2: '0'}
+    getAttributes(lowerShadow),
+    { class: 'lower-shadow', x1: '750', y1: '750', x2: '750', y2: '1000'}
   )
 })
 
