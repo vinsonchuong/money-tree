@@ -41,7 +41,7 @@ export default function({ data }) {
                 <svg className="chart">
                   {candlesticks.map(candlestick =>
                     <Candlestick
-                      key={candlestick.date}
+                      key={candlestick.time}
                       coordinates={coordinates}
                       candlestick={candlestick}
                     />
