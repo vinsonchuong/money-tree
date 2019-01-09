@@ -1,7 +1,4 @@
 import test from 'ava'
-import React from 'react'
-import render from '../render'
-import Dimensions from './'
 import { closeTab, findElement } from 'puppet-strings'
 import openApp from 'puppet-strings-open-app'
 
