@@ -17,6 +17,7 @@ test('mapping left/right scrolling to panning', t => {
       initialZoom={0}
       minZoom={0}
       maxZoom={0}
+      threshold={50}
       render={consume}
     />,
     container
@@ -53,6 +54,7 @@ test('mapping up/down scrolling to zooming', t => {
       initialZoom={10}
       minZoom={8}
       maxZoom={12}
+      threshold={50}
       render={consume}
     />,
     container

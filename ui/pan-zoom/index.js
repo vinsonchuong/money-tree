@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 export default function({
   initialPan, minPan, maxPan,
   initialZoom, minZoom, maxZoom,
+  threshold,
   render
 }) {
   const [pan, setPan] = useState(initialPan)
@@ -28,10 +29,10 @@ export default function({
           dy += event.deltaY
         }
 
-        if (dx > 50) setPan(pan + 1)
-        if (dx < -50) setPan(pan - 1)
-        if (dy > 50) setZoom(zoom + 1)
-        if (dy < -50) setZoom(zoom - 1)
+        if (dx > threshold) setPan(pan + 1)
+        if (dx < -threshold) setPan(pan - 1)
+        if (dy > threshold) setZoom(zoom + 1)
+        if (dy < -threshold) setZoom(zoom - 1)
       }}
     >
       {render({ pan, zoom })}

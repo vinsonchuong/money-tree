@@ -26,6 +26,7 @@ export default function({ data }) {
             initialZoom={10}
             minZoom={1}
             maxZoom={100}
+            threshold={20}
             render={({ pan, zoom }) => {
               const numCandles = zoom
               const offset = pan
