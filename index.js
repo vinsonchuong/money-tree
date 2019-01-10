@@ -1,18 +1,19 @@
 import { start } from './ui'
 import { startWssServer } from './lib/http'
 import { streamCandlesticks } from './lib/coinbase-pro'
+import { pipe, map, consume } from 'heliograph'
 
 async function run() {
   const api = await startWssServer(async socket => {
-    const candlesticks = streamCandlesticks({
-      productId: 'ETH-USD',
-      granularity: 1000 * 60 * 15,
-      start: Date.parse('2018-12-27')
-    })
-
-    for await (const candlestick of candlesticks) {
-      await socket.send(JSON.stringify(candlestick))
-    }
+    pipe(
+      streamCandlesticks({
+        productId: 'ETH-USD',
+        granularity: 1000 * 60 * 15,
+        start: Date.parse('2018-12-27')
+      }),
+      map(JSON.stringify),
+      consume(socket.send)
+    )
   })
 
   const ui = await start({

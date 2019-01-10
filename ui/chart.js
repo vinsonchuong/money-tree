@@ -28,11 +28,9 @@ export default function({ data }) {
             maxZoom={100}
             threshold={20}
             render={({ pan, zoom }) => {
-              const numCandles = zoom
-              const offset = pan
               const candlesticks = data.slice(
-                data.length - numCandles + offset,
-                data.length + offset
+                data.length - zoom + pan,
+                data.length + pan
               )
               
               const coordinates = defineCoordinates({ width, height, candlesticks })
