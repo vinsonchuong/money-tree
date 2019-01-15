@@ -5,88 +5,295 @@ import React from 'react'
 import render from '../render'
 import PanZoom from './'
 
-test('mapping left/right scrolling to panning', t => {
+function renderPanZoom({
+  initialStart = 1,
+  initialEnd = 999,
+  min = 0,
+  max = 1000,
+  minWindowSize = 0,
+  maxWindowSize = 1000
+}) {
   const container = document.createElement('div')
   const consume = td.function()
 
   render(
     <PanZoom
-      initialPan={0}
-      minPan={-3}
-      maxPan={0}
-      initialZoom={0}
-      minZoom={0}
-      maxZoom={0}
-      threshold={50}
+      initialStart={initialStart}
+      initialEnd={initialEnd}
+      min={min}
+      max={max}
+      minWindowSize={minWindowSize}
+      maxWindowSize={maxWindowSize}
       render={consume}
     />,
     container
   )
-  const panZoom = container.querySelector('div')
 
-  td.verify(consume({ pan: 0, zoom: 0 }))
+  const panZoom = container.querySelector('.pan-zoom')
 
-  Simulate.wheel(panZoom, { deltaX: 51, deltaY: 0 })
-  td.verify(consume({ pan: 1, zoom: 0 }), { times: 0 })
+  return { panZoom, consume }
+}
 
-  Simulate.wheel(panZoom, { deltaX: -25, deltaY: 0 })
-  Simulate.wheel(panZoom, { deltaX: -26, deltaY: 0 })
-  td.verify(consume({ pan: -1, zoom: 0 }))
+test('starting from an initial window', t => {
+  const { consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200
+  }) 
+  td.verify(consume({ start: 100, end: 200 }))
+  t.pass()
+})
 
-  Simulate.wheel(panZoom, { deltaX: -51, deltaY: 0 })
-  td.verify(consume({ pan: -2, zoom: 0 }))
 
-  Simulate.wheel(panZoom, { deltaX: 51, deltaY: 0 })
-  td.verify(consume({ pan: -1, zoom: 0 }), { times: 2 })
+test('panning', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 100, deltaY: 0 })
+  td.verify(consume({ start: 110, end: 210 }))
+
+  Simulate.wheel(panZoom, { deltaX: -100, deltaY: 0 })
+  td.verify(consume({ start: 100, end: 200 }))
+
+  Simulate.wheel(panZoom, { deltaX: -100, deltaY: 0 })
+  td.verify(consume({ start: 90, end: 190 }))
 
   t.pass()
 })
 
-test('mapping up/down scrolling to zooming', t => {
-  const container = document.createElement('div')
-  const consume = td.function()
+test('not panning beyond the min', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    min: 100
+  }) 
 
-  render(
-    <PanZoom
-      initialPan={0}
-      minPan={0}
-      maxPan={0}
-      initialZoom={10}
-      minZoom={8}
-      maxZoom={12}
-      threshold={50}
-      render={consume}
-    />,
-    container
-  )
-  const panZoom = container.querySelector('div')
+  Simulate.wheel(panZoom, { deltaX: -100, deltaY: 0 })
+  td.verify(consume({ start: 90, end: 190 }), { times: 0 })
 
-  td.verify(consume({ pan: 0, zoom: 10 }))
+  t.pass()
+})
 
-  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 25 })
-  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 26 })
-  td.verify(consume({ pan: 0, zoom: 11 }))
+test('panning right up to the min', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    min: 95
+  }) 
 
-  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 51 })
-  td.verify(consume({ pan: 0, zoom: 12 }))
+  Simulate.wheel(panZoom, { deltaX: -100, deltaY: 0 })
+  td.verify(consume({ start: 95, end: 195 }))
 
-  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 51 })
-  td.verify(consume({ pan: 0, zoom: 13 }), { times: 0 })
+  t.pass()
+})
 
-  Simulate.wheel(panZoom, { deltaX: 0, deltaY: -52 })
-  td.verify(consume({ pan: 0, zoom: 11 }), { times: 2 })
+test('not panning beyond the max', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    max: 200
+  }) 
 
-  Simulate.wheel(panZoom, { deltaX: 0, deltaY: -52 })
-  td.verify(consume({ pan: 0, zoom: 10 }), { times: 2 })
+  Simulate.wheel(panZoom, { deltaX: 100, deltaY: 0 })
+  td.verify(consume({ start: 110, end: 210 }), { times: 0 })
 
-  Simulate.wheel(panZoom, { deltaX: 0, deltaY: -51 })
-  td.verify(consume({ pan: 0, zoom: 9 }))
+  t.pass()
+})
 
-  Simulate.wheel(panZoom, { deltaX: 0, deltaY: -51 })
-  td.verify(consume({ pan: 0, zoom: 8 }))
+test('panning right up to the max', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    max: 205
+  }) 
 
-  Simulate.wheel(panZoom, { deltaX: 0, deltaY: -51 })
-  td.verify(consume({ pan: 0, zoom: 7 }), { times: 0 })
+  Simulate.wheel(panZoom, { deltaX: 100, deltaY: 0 })
+  td.verify(consume({ start: 105, end: 205 }))
+
+  t.pass()
+})
+
+test('zooming out', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 100 })
+  td.verify(consume({ start: 90, end: 200 }))
+
+  t.pass()
+})
+
+test('zooming out while at min', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    min: 100
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 100 })
+  td.verify(consume({ start: 100, end: 210 }))
+
+  t.pass()
+})
+
+test('not zooming out any further when at min and max', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    min: 100,
+    max: 200
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 100 })
+  td.verify(consume({ start: 90, end: 200 }), { times: 0 })
+  td.verify(consume({ start: 100, end: 210 }), { times: 0 })
+
+  t.pass()
+})
+
+test('zooming out right up to the min and max', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    min: 95,
+    max: 205
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 100 })
+  td.verify(consume({ start: 95, end: 205 }))
+
+  t.pass()
+})
+
+test('zooming out right up to but not beyond the min and max', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    min: 94,
+    max: 204
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 100 })
+  td.verify(consume({ start: 94, end: 204 }))
+
+  t.pass()
+})
+
+test('not zooming out beyond the max window size', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    maxWindowSize: 100
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 100 })
+  td.verify(consume({ start: 90, end: 200 }), { times: 0 })
+
+  t.pass()
+})
+
+test('zooming out up to the max window size', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    maxWindowSize: 105
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 100 })
+  td.verify(consume({ start: 95, end: 200 }))
+
+  t.pass()
+})
+
+test('panning faster after zooming out', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 100 })
+  Simulate.wheel(panZoom, { deltaX: 100, deltaY: 0 })
+  td.verify(consume({ start: 101, end: 211 }))
+
+  t.pass()
+})
+
+test('zooming out faster after zooming out', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 100 })
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: 100 })
+  td.verify(consume({ start: 79, end: 200 }))
+
+  t.pass()
+})
+
+test('zooming in', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: -100 })
+  td.verify(consume({ start: 110, end: 200 }))
+
+  t.pass()
+})
+
+test('not zooming in beyond the min window size', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    minWindowSize: 100
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: -100 })
+  td.verify(consume({ start: 110, end: 200 }), { times: 0 })
+
+  t.pass()
+})
+
+test('zooming in up to the min window size', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200,
+    minWindowSize: 95 
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: -100 })
+  td.verify(consume({ start: 105, end: 200 }))
+
+  t.pass()
+})
+
+test('panning slower after zooming in', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: -100 })
+  Simulate.wheel(panZoom, { deltaX: 100, deltaY: 0 })
+  td.verify(consume({ start: 119, end: 209 }))
+
+  t.pass()
+})
+
+test('zooming in slower after zooming in', t => {
+  const { panZoom, consume } = renderPanZoom({
+    initialStart: 100,
+    initialEnd: 200
+  }) 
+
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: -100 })
+  Simulate.wheel(panZoom, { deltaX: 0, deltaY: -100 })
+  td.verify(consume({ start: 119, end: 200 }))
 
   t.pass()
 })

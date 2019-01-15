@@ -1,41 +1,56 @@
 import React, { useState } from 'react'
 
 export default function({
-  initialPan, minPan, maxPan,
-  initialZoom, minZoom, maxZoom,
-  threshold,
+  initialStart, initialEnd,
+  min, max,
+  minWindowSize, maxWindowSize,
   render
 }) {
-  const [pan, setPan] = useState(initialPan)
-  const [zoom, setZoom] = useState(initialZoom)
+  const [{ start, end }, setWindow] = useState({
+    start: initialStart,
+    end: initialEnd
+  })
 
-  let dx = 0
-  let dy = 0
+  function handleWheel(event) {
+    if (event.deltaX > 0 && end < max) {
+      const increment = Math.min(0.1 * (end - start), max - end)
+      setWindow({ start: start + increment, end: end + increment })
+    }
+
+    if (event.deltaX < 0 && start > min) {
+      const increment = Math.min(0.1 * (end - start), start - min)
+      setWindow({ start: start - increment, end: end - increment })
+    }
+
+    if (event.deltaY > 0) {
+      const increment = Math.min(
+        0.1 * (end - start),
+        maxWindowSize - (end - start)
+      )
+      const startIncrement = Math.min(increment, start - min)
+      const endIncrement = Math.min(increment - startIncrement, max - end)
+
+      setWindow({
+        start: start - startIncrement,
+        end: end + endIncrement
+      })
+    }
+
+    if (event.deltaY < 0) {
+      const increment = Math.min(
+        0.1 * (end - start),
+        (end - start) - minWindowSize
+      )
+      setWindow({ start: start + increment, end })
+    }
+  }
 
   return (
     <div
-      onWheel={event => {
-        if (
-          event.deltaX < 0 && pan > minPan ||
-          event.deltaX > 0 && pan < maxPan
-        ) {
-          dx += event.deltaX
-        }
-
-        if (
-          event.deltaY < 0 && zoom > minZoom ||
-          event.deltaY > 0 && zoom < maxZoom
-        ) {
-          dy += event.deltaY
-        }
-
-        if (dx > threshold) setPan(pan + 1)
-        if (dx < -threshold) setPan(pan - 1)
-        if (dy > threshold) setZoom(zoom + 1)
-        if (dy < -threshold) setZoom(zoom - 1)
-      }}
+      className="pan-zoom"
+      onWheel={handleWheel}
     >
-      {render({ pan, zoom })}
+      {render({ start, end })}
     </div>
   )
 }

@@ -15,25 +15,35 @@ const Styled = styled.div`
 `
 
 export default function({ data }) {
+  const granularity = data[0].granularity
+  const oldestOpen = data[0].time.valueOf()
+  const mostRecentOpen = data[data.length - 1].time.valueOf()
+
   return (
     <Styled>
       <Dimensions
         render={({ width, height }) =>
           <PanZoom
-            initialPan={0}
-            minPan={-data.length}
-            maxPan={0}
-            initialZoom={10}
-            minZoom={1}
-            maxZoom={100}
-            threshold={20}
-            render={({ pan, zoom }) => {
+            initialStart={mostRecentOpen - 9 * granularity}
+            initialEnd={mostRecentOpen + granularity}
+            min={data[0].time.valueOf()}
+            max={mostRecentOpen + granularity}
+            minWindowSize={10 * granularity}
+            maxWindowSize={1000 * granularity}
+            render={({ start: startTime, end: endTime }) => {
               const candlesticks = data.slice(
-                data.length - zoom + pan,
-                data.length + pan
+                Math.floor((startTime - oldestOpen) / granularity),
+                Math.ceil((endTime - granularity - oldestOpen) / granularity) + 1
               )
               
-              const coordinates = defineCoordinates({ width, height, candlesticks })
+              const coordinates = defineCoordinates({
+                width,
+                height,
+                minX: startTime.valueOf(),
+                maxX: endTime.valueOf(),
+                minY: Math.min(...candlesticks.map(c => c.low)),
+                maxY: Math.max(...candlesticks.map(c => c.high)),
+              })
   
               return (
                 <svg className="chart">

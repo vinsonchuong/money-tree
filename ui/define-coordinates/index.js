@@ -1,14 +1,13 @@
-export default function({ width, height, candlesticks }) {
-  const minTime = candlesticks[0].time.valueOf()
-  const maxTime = candlesticks[candlesticks.length - 1].time.valueOf()
-  const granularity = candlesticks[0].granularity
-  const minPrice = Math.min(...candlesticks.map(c => c.low))
-  const maxPrice = Math.max(...candlesticks.map(c => c.high))
+export default function({
+  width, height,
+  minX, maxX,
+  minY, maxY
+}) {
 
   return {
-    x: time => (time.valueOf() - minTime) / (maxTime + granularity - minTime) * width,
-    width: time => time / (maxTime + granularity - minTime) * width,
-    y: price => (1 - (price - minPrice) / (maxPrice - minPrice)) * height,
-    height: price => price / (maxPrice - minPrice) * height,
+    x: x => (x - minX) / (maxX - minX) * width,
+    width: x => x / (maxX - minX) * width,
+    y: price => (1 - (price - minY) / (maxY - minY)) * height,
+    height: price => price / (maxY - minY) * height,
   }
 }
