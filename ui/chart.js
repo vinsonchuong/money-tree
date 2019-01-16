@@ -4,9 +4,10 @@ import defineCoordinates from './define-coordinates'
 import Dimensions from './dimensions'
 import PanZoom from './pan-zoom'
 import Candlestick from './candlestick'
+import DateAxis from './date-axis' 
+import PriceAxis from './price-axis'
 
 const Styled = styled.div`
-
   svg {
     display: block;
     width: 100vw;
@@ -37,8 +38,8 @@ export default function({ data }) {
               )
               
               const coordinates = defineCoordinates({
-                width,
-                height,
+                width: width - 50,
+                height: height - 50,
                 minX: startTime.valueOf(),
                 maxX: endTime.valueOf(),
                 minY: Math.min(...candlesticks.map(c => c.low)),
@@ -47,6 +48,8 @@ export default function({ data }) {
   
               return (
                 <svg className="chart">
+                  <DateAxis coordinates={coordinates} />
+                  <PriceAxis coordinates={coordinates} />
                   {candlesticks.map(candlestick =>
                     <Candlestick
                       key={candlestick.time}
