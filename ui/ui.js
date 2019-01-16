@@ -1,6 +1,6 @@
 import React from 'react'
 import { fromWebSocket } from 'heliograph'
-import render from './render'
+import { render } from 'react-dom'
 import Chart from './chart'
 
 async function connectToApi() {

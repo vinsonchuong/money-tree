@@ -2,7 +2,7 @@ import test from 'ava'
 import td from 'testdouble'
 import { Simulate } from 'react-dom/test-utils'
 import React from 'react'
-import render from '../render'
+import { render } from 'test-tube'
 import PanZoom from './'
 
 function renderPanZoom({
@@ -13,10 +13,9 @@ function renderPanZoom({
   minWindowSize = 0,
   maxWindowSize = 1000
 }) {
-  const container = document.createElement('div')
   const consume = td.function()
 
-  render(
+  const container = render(
     <PanZoom
       initialStart={initialStart}
       initialEnd={initialEnd}
@@ -25,8 +24,7 @@ function renderPanZoom({
       minWindowSize={minWindowSize}
       maxWindowSize={maxWindowSize}
       render={consume}
-    />,
-    container
+    />
   )
 
   const panZoom = container.querySelector('.pan-zoom')

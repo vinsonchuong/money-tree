@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import render from './render'
+import { render } from 'test-tube'
 import defineCoordinates from './define-coordinates'
 import Candlestick from './candlestick'
 
@@ -33,17 +33,17 @@ const coordinates = defineCoordinates({
 })
 
 test('rendering an increasing candlestick', t => {
-  const container = document.createElement('svg')
-  render(
-    <Candlestick
-      coordinates={coordinates}
-      candlestick={candlesticks[0]}
-    />,
-    container
+  const container = render(
+    <svg>
+      <Candlestick
+        coordinates={coordinates}
+        candlestick={candlesticks[0]}
+      />
+    </svg>
   )
 
   const candlestick = container.querySelector('.candlestick')
-  t.true(candlestick.className.includes('increasing'))
+  t.true(candlestick.classList.contains('increasing'))
 
   const upperShadow = candlestick.querySelector('.upper-shadow')
   t.deepEqual(
@@ -65,17 +65,17 @@ test('rendering an increasing candlestick', t => {
 })
 
 test('rendering a decreasing candlestick', t => {
-  const container = document.createElement('svg')
-  render(
-    <Candlestick
-      coordinates={coordinates}
-      candlestick={candlesticks[1]}
-    />,
-    container
+  const container = render(
+    <svg>
+      <Candlestick
+        coordinates={coordinates}
+        candlestick={candlesticks[1]}
+      />
+    </svg>
   )
 
   const candlestick = container.querySelector('.candlestick')
-  t.true(candlestick.className.includes('decreasing'))
+  t.true(candlestick.classList.contains('decreasing'))
 
   const upperShadow = candlestick.querySelector('.upper-shadow')
   t.deepEqual(
