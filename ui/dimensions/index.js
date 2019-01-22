@@ -6,10 +6,10 @@ export default function({ render }) {
 
   useEffect(() => {
     const observer = new ResizeObserver(entries => {
-      for (const entry of entries) {
+      for (const { target: { clientWidth, clientHeight } } of entries) {
         setDimensions({
-          width: entry.target.clientWidth,
-          height: entry.target.clientHeight
+          width: clientWidth,
+          height: clientHeight
         })
       }
     })
@@ -17,7 +17,10 @@ export default function({ render }) {
   }, [])
 
   return (
-    <div ref={container}>
+    <div
+      ref={container}
+      style={{ width: '100%', height: '100%' }}
+    >
       {dimensions && render(dimensions)}
     </div>
   )

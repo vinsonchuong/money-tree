@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 import defineCoordinates from './define-coordinates'
 import Dimensions from './dimensions'
 import PanZoom from './pan-zoom'
@@ -7,21 +6,16 @@ import Candlestick from './candlestick'
 import DateAxis from './date-axis' 
 import PriceAxis from './price-axis'
 
-const Styled = styled.div`
-  svg {
-    display: block;
-    width: 100vw;
-    height: 100vh;
-  }
-`
-
 export default function({ data }) {
   const granularity = data[0].granularity
   const oldestOpen = data[0].time.valueOf()
   const mostRecentOpen = data[data.length - 1].time.valueOf()
 
   return (
-    <Styled>
+    <div
+      className="chart"
+      style={{ width: '100vw', height: '100vh' }}
+    >
       <Dimensions
         render={({ width, height }) =>
           <PanZoom
@@ -47,7 +41,7 @@ export default function({ data }) {
               })
   
               return (
-                <svg className="chart">
+                <svg width="100vw" height="100vh">
                   <DateAxis coordinates={coordinates} />
                   <PriceAxis coordinates={coordinates} />
                   {candlesticks.map(candlestick =>
@@ -63,6 +57,6 @@ export default function({ data }) {
           />
         }
       />
-    </Styled>
+    </div>
   )
 }
