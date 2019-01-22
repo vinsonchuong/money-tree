@@ -31,9 +31,9 @@ export default function({
   const bodyBottom = Math.min(open, close)
 
   return (
-      <Styled
-        className={cx('candlestick', { increasing: close >= open, decreasing: close < open })}
-      >
+    <Styled
+      className={cx('candlestick', { increasing: close >= open, decreasing: close < open })}
+    >
       <line
         className="upper-shadow"
         x1={x(time.valueOf() + granularity / 2)}

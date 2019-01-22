@@ -24,12 +24,14 @@ const candlesticks = [
 ]
 
 const coordinates = defineCoordinates({
+  xName: 'time',
+  yName: 'price',
   width: 1000,
   height: 1000,
-  minX: candlesticks[0].time.valueOf(),
-  maxX: candlesticks[1].time.valueOf() + candlesticks[0].granularity,
-  minY: Math.min(...candlesticks.map(c => c.low)),
-  maxY: Math.max(...candlesticks.map(c => c.high)),
+  minTime: candlesticks[0].time.valueOf(),
+  maxTime: candlesticks[1].time.valueOf() + candlesticks[0].granularity,
+  minPrice: Math.min(...candlesticks.map(c => c.low)),
+  maxPrice: Math.max(...candlesticks.map(c => c.high)),
 })
 
 test('rendering an increasing candlestick', t => {

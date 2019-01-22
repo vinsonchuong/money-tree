@@ -16,8 +16,8 @@ const Styled = styled.g`
 
 export default function({
   coordinates: {
-    minX: minTime, maxX: maxTime,
-    minY, maxY,
+    minTime, maxTime,
+    minPrice, maxPrice,
     x, y
   }
 }) {
@@ -27,9 +27,9 @@ export default function({
     <Styled className="date-axis">
       <line
         x1={x(minTime)}
-        y1={y(minY)}
+        y1={y(minPrice)}
         x2={x(maxTime)}
-        y2={y(minY)}
+        y2={y(minPrice)}
       />
       {
         range(
@@ -40,7 +40,7 @@ export default function({
           <Fragment key={time}>
             <text
               x={x(time)}
-              y={y(minY) + 5}
+              y={y(minPrice) + 5}
               textAnchor="middle"
               dominantBaseline="hanging"
             >
@@ -48,9 +48,9 @@ export default function({
             </text>
             <line
               x1={x(time)}
-              y1={y(maxY)}
+              y1={y(maxPrice)}
               x2={x(time)}
-              y2={y(minY)}
+              y2={y(minPrice)}
             />
           </Fragment>
         )

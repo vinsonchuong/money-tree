@@ -5,6 +5,7 @@ import PanZoom from './pan-zoom'
 import Candlestick from './candlestick'
 import DateAxis from './date-axis' 
 import PriceAxis from './price-axis'
+import MousePosition from './mouse-position'
 
 export default function({ data }) {
   const granularity = data[0].granularity
@@ -32,16 +33,18 @@ export default function({ data }) {
               )
               
               const coordinates = defineCoordinates({
-                width: width - 50,
+                xName: 'time',
+                yName: 'price',
+                width: width - 60,
                 height: height - 50,
-                minX: startTime.valueOf(),
-                maxX: endTime.valueOf(),
-                minY: Math.min(...candlesticks.map(c => c.low)),
-                maxY: Math.max(...candlesticks.map(c => c.high)),
+                minTime: startTime.valueOf(),
+                maxTime: endTime.valueOf(),
+                minPrice: Math.min(...candlesticks.map(c => c.low)),
+                maxPrice: Math.max(...candlesticks.map(c => c.high)),
               })
   
               return (
-                <svg width="100vw" height="100vh">
+                <svg width="100vw" height="100vh" style={{ display: 'block' }}>
                   <DateAxis coordinates={coordinates} />
                   <PriceAxis coordinates={coordinates} />
                   {candlesticks.map(candlestick =>
@@ -51,6 +54,7 @@ export default function({ data }) {
                       candlestick={candlestick}
                     />
                   )}
+                  <MousePosition coordinates={coordinates} />
                 </svg>
               )
             }}
