@@ -16,11 +16,9 @@ const Styled = styled.g`
 
 export default function({
   coordinates: {
-    x, y,
-    time, price,
-    width, height,
-    minTime, maxTime,
-    minPrice, maxPrice
+    minX, maxX,
+    minY, maxY,
+    time, price
   }
 }) {
   const [position, setPosition] = useState(null)
@@ -32,37 +30,37 @@ export default function({
     >
       <rect
         className="bounding-box"
-        x={x(minTime)}
-        y={y(maxPrice)}
-        width={width(maxTime - minTime)}
-        height={height(maxPrice - minPrice)}
+        x={minX}
+        y={minY}
+        width={maxX - minX}
+        height={maxY - minY}
       />
       {position &&
         <>
           <line
             className="grid-line"
-            x1={x(minTime)}
+            x1={minX}
             y1={position.y}
-            x2={x(maxTime)}
+            x2={maxX}
             y2={position.y}
           />
           <line
             className="grid-line"
             x1={position.x}
-            y1={y(maxPrice)}
+            y1={minY}
             x2={position.x}
-            y2={y(minPrice)}
+            y2={maxY}
           />
           <text
             x={position.x}
-            y={y(minPrice) + 5}
+            y={maxY + 5}
             textAnchor="middle"
             dominantBaseline="hanging"
           >
             {format(new Date(time(position.x)), 'h:mma')}
           </text>
           <text
-            x={x(maxTime) + 5}
+            x={maxX + 5}
             y={position.y}
             dominantBaseline="middle"
           >

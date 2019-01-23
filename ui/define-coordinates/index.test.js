@@ -3,20 +3,25 @@ import defineCoordinates from './'
 
 test('including the original parameters', t => {
   const coordinates = defineCoordinates({
-    xName: 'x',
-    yName: 'y',
+    xName: 'foo',
+    yName: 'bar',
     width: 1000,
     height: 1000,
-    minX: 0,
-    maxX: 100,
-    minY: 0,
-    maxY: 1000
+    minFoo: 0,
+    maxFoo: 100,
+    minBar: 0,
+    maxBar: 1000
   })
 
   t.is(coordinates.minX, 0)
-  t.is(coordinates.maxX, 100)
+  t.is(coordinates.maxX, 1000)
   t.is(coordinates.minY, 0)
   t.is(coordinates.maxY, 1000)
+
+  t.is(coordinates.minFoo, 0)
+  t.is(coordinates.maxFoo, 100)
+  t.is(coordinates.minBar, 0)
+  t.is(coordinates.maxBar, 1000)
 })
 
 test('defining a time/price to pixel coordinate system', t => {
