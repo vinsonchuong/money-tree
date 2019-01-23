@@ -1,9 +1,12 @@
 import test from 'ava'
 import td from 'testdouble'
+import { promisify } from 'util'
 import { Simulate } from 'react-dom/test-utils'
 import React from 'react'
 import { render } from 'test-tube'
 import PanZoom from './'
+
+const sleep = promisify(setTimeout)
 
 function renderPanZoom({
   initialStart = 1,
@@ -292,6 +295,41 @@ test('zooming in slower after zooming in', t => {
   Simulate.wheel(panZoom, { deltaX: 0, deltaY: -100 })
   Simulate.wheel(panZoom, { deltaX: 0, deltaY: -100 })
   td.verify(consume({ start: 119, end: 200 }))
+
+  t.pass()
+})
+
+test.only('automatically panning to the right when the window is against the max and the max increases', async t => {
+  const consume = td.function()
+
+  const container = render(
+    <PanZoom
+      initialStart={100}
+      initialEnd={200}
+      min={0}
+      max={200}
+      minWindowSize={0}
+      maxWindowSize={1000}
+      render={consume}
+    />
+  )
+  await sleep(0)
+
+  render(
+    <PanZoom
+      initialStart={100}
+      initialEnd={200}
+      min={0}
+      max={220}
+      minWindowSize={0}
+      maxWindowSize={1000}
+      render={consume}
+    />,
+    container
+  )
+  await sleep(0)
+
+  td.verify(consume({ start: 120, end: 220 }))
 
   t.pass()
 })

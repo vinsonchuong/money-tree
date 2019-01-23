@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 export default function({
   initialStart, initialEnd,
@@ -11,15 +11,25 @@ export default function({
     end: initialEnd
   })
 
+  const [pinnedToMax, setPinnedToMax] = useState(initialEnd === max)
+
+  useEffect(() => {
+    if (pinnedToMax && end !== max) {
+      setWindow({ start: start + max - end, end: max })
+    }
+  }, [max])
+
   function handleWheel(event) {
     if (event.deltaX > 0 && end < max) {
       const increment = Math.min(0.1 * (end - start), max - end)
       setWindow({ start: start + increment, end: end + increment })
+      setPinnedToMax(end + increment === max)
     }
 
     if (event.deltaX < 0 && start > min) {
       const increment = Math.min(0.1 * (end - start), start - min)
       setWindow({ start: start - increment, end: end - increment })
+      setPinnedToMax(false)
     }
 
     if (event.deltaY > 0) {

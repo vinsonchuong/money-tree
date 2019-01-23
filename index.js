@@ -9,7 +9,7 @@ async function run() {
       streamCandlesticks({
         productId: 'ETH-USD',
         granularity: 1000 * 60 * 15,
-        start: Date.parse('2018-12-27')
+        start: Date.parse('2019-01-14')
       }),
       map(JSON.stringify),
       consume(socket.send)
