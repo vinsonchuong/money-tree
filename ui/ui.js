@@ -20,16 +20,16 @@ async function run() {
 
   let candlesticks = []
   for await (const message of socket) {
-    const parsedMessage = JSON.parse(message)
-    const candlestick = {
-      ...parsedMessage,
-      time: new Date(parsedMessage.time)
-    }
-    candlesticks = [...candlesticks, candlestick]
+    const candlestickBatch = JSON.parse(message)
+    candlesticks = [
+      ...candlesticks,
+      ...candlestickBatch.map(candlestick => ({
+        ...candlestick,
+        time: new Date(candlestick.time)
+      }))
+    ]
 
-    if (new Date() - candlestick.time <= 2 * 1000 * 60 * 15) {
-      render(<Chart data={candlesticks} />, window.root)
-    }
+    render(<Chart data={candlesticks} />, window.root)
   }
 }
 

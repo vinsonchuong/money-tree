@@ -8,23 +8,24 @@ test('starting the ui', async t => {
   const candlestickIndex = Math.floor(Date.now() / granularity)
 
   const api = await startWssServer(async socket => {
-    await socket.send(JSON.stringify({
-      time: new Date((candlestickIndex - 1) * granularity),
-      granularity,
-      open: 100,
-      close: 110,
-      high: 120,
-      low: 90
-    }))
-
-    await socket.send(JSON.stringify({
-      time: new Date(candlestickIndex * granularity),
-      granularity,
-      open: 110,
-      close: 120,
-      high: 130,
-      low: 100
-    }))
+    await socket.send(JSON.stringify([
+      {
+        time: new Date((candlestickIndex - 1) * granularity),
+        granularity,
+        open: 100,
+        close: 110,
+        high: 120,
+        low: 90
+      },
+      {
+        time: new Date(candlestickIndex * granularity),
+        granularity,
+        open: 110,
+        close: 120,
+        high: 130,
+        low: 100
+      }
+    ]))
   })
   const ui = await start({ apiUrl: `wss://localhost:${api.port}` })
 

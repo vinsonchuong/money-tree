@@ -46,20 +46,14 @@ async function run() {
     ? mostRecentCandlestick.time.valueOf() + granularity
     : Date.parse('2016-05-18T00:14:00.000Z')
 
-  const stream = streamCandlesticks({
+  const candlestickBatches = streamCandlesticks({
     productId: 'ETH-USD',
     granularity,
     start
   })
 
-  let candlesticksBuffer = []
-  for await (const candlestick of stream) {
-    candlesticksBuffer.push(candlestick)
-
-    if (candlesticksBuffer.length >= 120) {
-      await insertRows(database, 'candlesticks', candlesticksBuffer)
-      candlesticksBuffer = []
-    }
+  for await (const batch of candlestickBatches) {
+    await insertRows(database, 'candlesticks', batch)
   }
 
   await closeDatabase(database)
