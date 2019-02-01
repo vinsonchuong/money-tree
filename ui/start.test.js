@@ -31,7 +31,7 @@ test('starting the ui', async t => {
 
   const tab = await openCarlo(ui)
 
-  await findElement(tab, '.chart')
+  await findElement(tab, '.chart .candlestick')
   t.is(
     await evalInTab(tab, [], `return document.querySelectorAll('.candlestick').length`),
     2
