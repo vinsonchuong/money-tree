@@ -1,3 +1,4 @@
 /.cache
+/candlesticks.db
 /dist
 /node_modules
