@@ -8,7 +8,7 @@ import {
   sendQuery,
   insertRows
 } from 'rumor-mill'
-import { streamCandlesticks } from './lib/coinbase-pro'
+import { getHistoricCandlesticks } from './lib/coinbase-pro'
 
 async function run() {
   const granularity = 1000 * 60
@@ -42,14 +42,13 @@ async function run() {
     }
   })
 
-  const start = mostRecentCandlestick
-    ? mostRecentCandlestick.time.valueOf() + granularity
-    : Date.parse('2016-05-18T00:14:00.000Z')
-
-  const candlestickBatches = streamCandlesticks({
+  const candlestickBatches = getHistoricCandlesticks({
     productId: 'ETH-USD',
     granularity,
-    start
+    start: mostRecentCandlestick
+      ? mostRecentCandlestick.time.valueOf() + granularity
+      : Date.parse('2016-05-18T00:14:00.000Z'),
+    end: Math.floor(Date.now() / granularity) * granularity
   })
 
   for await (const batch of candlestickBatches) {
