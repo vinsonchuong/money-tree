@@ -37,6 +37,7 @@ async function run() {
   const [mostRecentCandlestick] = await sendQuery(database, {
     $select: {
       $from: 'candlesticks',
+      $where: { granularity },
       $orderBy: { time: 'DESC' },
       $limit: 1
     }
