@@ -3,6 +3,7 @@ import defineCoordinates from './define-coordinates'
 import Dimensions from './dimensions'
 import PanZoom from './pan-zoom'
 import Candlestick from './candlestick'
+import VolumeBar from './volume-bar'
 import DateAxis from './date-axis' 
 import PriceAxis from './price-axis'
 import MousePosition from './mouse-position'
@@ -42,18 +43,36 @@ export default function({ data }) {
                 minPrice: Math.min(...candlesticks.map(c => c.low)),
                 maxPrice: Math.max(...candlesticks.map(c => c.high)),
               })
+
+              const volumeCoordinates = defineCoordinates({
+                xName: 'time',
+                yName: 'volume',
+                width: width - 60,
+                height: height - 50,
+                minTime: startTime.valueOf(),
+                maxTime: endTime.valueOf(),
+                minVolume: 0,
+                maxVolume: Math.max(...candlesticks.map(c => c.volume)) * 3,
+              })
   
               return (
                 <svg width="100vw" height="100vh" style={{ display: 'block' }}>
                   <DateAxis coordinates={coordinates} />
                   <PriceAxis coordinates={coordinates} />
+
                   {candlesticks.map(candlestick =>
-                    <Candlestick
-                      key={candlestick.time}
-                      coordinates={coordinates}
-                      candlestick={candlestick}
-                    />
+                    <React.Fragment key={candlestick.time}>
+                      <Candlestick
+                        coordinates={coordinates}
+                        candlestick={candlestick}
+                      />
+                      <VolumeBar
+                        coordinates={volumeCoordinates}
+                        candlestick={candlestick}
+                      />
+                    </React.Fragment>
                   )}
+
                   <MousePosition coordinates={coordinates} />
                 </svg>
               )
