@@ -4,6 +4,7 @@ import Dimensions from './dimensions'
 import PanZoom from './pan-zoom'
 import Candlestick from './candlestick'
 import VolumeBar from './volume-bar'
+import TrendLine from './trend-line'
 import DateAxis from './date-axis' 
 import PriceAxis from './price-axis'
 import MousePosition from './mouse-position'
@@ -74,6 +75,18 @@ export default function({ data }) {
                       />
                     </React.Fragment>
                   )}
+                  <TrendLine
+                    coordinates={coordinates}
+                    candlesticks={candlesticks}
+                    name="sma50"
+                    color="#a4afcb"
+                  />
+                  <TrendLine
+                    coordinates={coordinates}
+                    candlesticks={candlesticks}
+                    name="sma200"
+                    color="#7583aa"
+                  />
 
                   <MousePosition coordinates={coordinates} />
                 </svg>

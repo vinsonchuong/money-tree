@@ -1,12 +1,15 @@
 import { start } from './ui'
 import { startWssServer } from './lib/http'
 import { streamAndCacheCandlesticks } from './lib/coinbase-pro'
+import { simpleMovingAverage } from './lib/indicators'
 import { pipe, map, consume } from 'heliograph'
 
 async function run() {
   const api = await startWssServer(async socket => {
     pipe(
       streamAndCacheCandlesticks(),
+      simpleMovingAverage(50),
+      simpleMovingAverage(200),
       map(JSON.stringify),
       consume(socket.send)
     )
