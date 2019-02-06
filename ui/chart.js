@@ -75,6 +75,7 @@ export default function({ data }) {
                       />
                     </React.Fragment>
                   )}
+
                   <TrendLine
                     coordinates={coordinates}
                     candlesticks={candlesticks}
@@ -86,6 +87,19 @@ export default function({ data }) {
                     candlesticks={candlesticks}
                     name="sma200"
                     color="#7583aa"
+                  />
+
+                  <TrendLine
+                    coordinates={coordinates}
+                    candlesticks={candlesticks}
+                    name="ema12"
+                    color="#f5b573"
+                  />
+                  <TrendLine
+                    coordinates={coordinates}
+                    candlesticks={candlesticks}
+                    name="ema26"
+                    color="#d38e47"
                   />
 
                   <MousePosition coordinates={coordinates} />
