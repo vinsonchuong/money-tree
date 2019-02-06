@@ -32,6 +32,8 @@ export default function({ data }) {
                 Math.floor((startTime - oldestOpen) / granularity),
                 Math.ceil((endTime - granularity - oldestOpen) / granularity) + 1
               )
+              const minPrice = Math.min(...candlesticks.map(c => c.low))
+              const maxPrice = Math.max(...candlesticks.map(c => c.high))
               
               const coordinates = defineCoordinates({
                 xName: 'time',
@@ -40,8 +42,8 @@ export default function({ data }) {
                 height: height - 50,
                 minTime: startTime.valueOf(),
                 maxTime: endTime.valueOf(),
-                minPrice: Math.min(...candlesticks.map(c => c.low)),
-                maxPrice: Math.max(...candlesticks.map(c => c.high)),
+                minPrice: minPrice - 0.1 * (maxPrice - minPrice),
+                maxPrice: maxPrice + 0.1 * (maxPrice - minPrice)
               })
 
               const volumeCoordinates = defineCoordinates({
@@ -62,12 +64,12 @@ export default function({ data }) {
 
                   {candlesticks.map(candlestick =>
                     <React.Fragment key={candlestick.time}>
-                      <Candlestick
-                        coordinates={coordinates}
-                        candlestick={candlestick}
-                      />
                       <VolumeBar
                         coordinates={volumeCoordinates}
+                        candlestick={candlestick}
+                      />
+                      <Candlestick
+                        coordinates={coordinates}
                         candlestick={candlestick}
                       />
                     </React.Fragment>

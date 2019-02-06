@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const Styled = styled.g`
   stroke-width: 0;
-  fill: #eee;
+  fill: #999;
 `
 
 const margin = 2

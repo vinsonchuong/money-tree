@@ -5,6 +5,7 @@ import styled from 'styled-components'
 const Styled = styled.g`
   stroke-width: 0;
   fill: transparent;
+  opacity: 0.8;
 
   &.increasing {
     stroke: #2d882d;
