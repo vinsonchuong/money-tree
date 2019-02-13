@@ -14,22 +14,36 @@ async function connectToApi() {
   return global.socket
 }
 
-
 async function run() {
   const socket = await connectToApi()
 
   let candlesticks = []
-  for await (const message of socket) {
-    const candlestickBatch = JSON.parse(message)
-    candlesticks = [
-      ...candlesticks,
-      ...candlestickBatch.map(candlestick => ({
-        ...candlestick,
-        time: new Date(candlestick.time)
-      }))
-    ]
+  let volumeByPrice = []
 
-    render(<Chart data={candlesticks} />, window.root)
+  for await (const message of socket) {
+    const { type, data } = JSON.parse(message)
+
+    if (type === 'candlesticks') {
+      candlesticks = [
+        ...candlesticks,
+        ...data.map(candlestick => ({
+          ...candlestick,
+          time: new Date(candlestick.time)
+        }))
+      ]
+    } else if (type === 'volume-by-price') {
+      volumeByPrice = data
+    }
+
+    if (candlesticks.length > 0 && volumeByPrice.length > 0) {
+      render(
+        <Chart
+          candlesticks={candlesticks}
+          volumeByPrice={volumeByPrice}
+        />,
+        window.root
+      )
+    }
   }
 }
 
