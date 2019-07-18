@@ -3,6 +3,7 @@
   "scripts": {
     "start": "node -r @babel/register index.js",
     "cache-candlesticks": "node -r @babel/register cache-candlesticks.js",
+    "backtest": "node -r @babel/register backtest.js",
     "test": "ava -v"
   },
   "dependencies": {

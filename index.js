@@ -3,6 +3,7 @@ import { startWssServer } from './lib/http'
 import { streamAndCacheCandlesticks } from './lib/coinbase-pro'
 import { simpleMovingAverage, exponentialMovingAverage } from './lib/indicators'
 import { pipe, map, observe, consume } from 'heliograph'
+import { batchMap } from './lib/async-iteration'
 import { sortBy } from 'lodash'
 
 async function run() {
@@ -11,10 +12,10 @@ async function run() {
 
     pipe(
       streamAndCacheCandlesticks(),
-      simpleMovingAverage(50),
-      simpleMovingAverage(200),
-      exponentialMovingAverage(12),
-      exponentialMovingAverage(26),
+      batchMap(simpleMovingAverage(50)),
+      batchMap(simpleMovingAverage(200)),
+      batchMap(exponentialMovingAverage(12)),
+      batchMap(exponentialMovingAverage(26)),
 
       observe(async candlestickBatch => {
         for (const candlestick of candlestickBatch) {
