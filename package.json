@@ -30,7 +30,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
     "ava": "^1.2.0",
-    "jsdom": "^13.2.0",
+    "jsdom": "^16.5.0",
     "parcel-bundler": "^1.11.0",
     "puppet-strings": "^2.4.0",
     "puppet-strings-open-app": "^1.3.1",
